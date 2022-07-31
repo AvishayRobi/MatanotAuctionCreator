@@ -9,6 +9,9 @@ namespace MatanotAuctionCreator.Model
 {
   public class MatanotOrder : ICasualOrderConvertible
   {
+    [JsonProperty("shopper_id")]
+    public string ShopperID { get; set; }
+
     [JsonProperty("order_id")]
     public int OrderID { get; set; }
 
@@ -31,38 +34,47 @@ namespace MatanotAuctionCreator.Model
       =>
       new CasualOrder()
       {
+        AffiliateName = WSGeneralUtils.GetAppSettings("affiliateName"),
+        ShippingDetails = getShippingDetails(),
+        ShopperDetails = getShopperDetails(),
         TotalOrderPrice = this.TotalPrice,
-        AffiliateName = string.Empty,
         DateCreated = this.OrderDate,
         Items = getConvertedItems(),
+        ShopperID = this.ShopperID,
         EntryID = this.OrderID,
-        ShopID = getShopID(),
-        ShippingDetails = new ShippingDetails()
-        {
-          ZipCode = int.Parse(this.ShipmentInfo.ZipCode),
-          StreetNumber = this.ShipmentInfo.StreetNumber,
-          StreetName = this.ShipmentInfo.StreetName,
-          City = this.ShipmentInfo.City,
-          Enterance = string.Empty,
-          Apratment = 0,
-          Floor = 0
-        },
-        ShopperDetails = new ShopperDetails()
-        {
-          Idz = WSGeneralUtils.GetAppSettings("DefaultShopperIdz"),
-          FirstName = this.ClientInfo.FirstName,
-          Email = this.ClientInfo.EmailAddress,
-          LastName = this.ClientInfo.LastName,
-          PhoneNumber = getPhoneNumber(),
-          Birthdate = DateTime.Today
-        }
-        .ValidateIdz()
+        ShopID = getShopID()
       };
+
+    private ShippingDetails getShippingDetails()
+      =>
+      new ShippingDetails()
+      {
+        ZipCode = int.Parse(this.ShipmentInfo.ZipCode),
+        StreetNumber = this.ShipmentInfo.StreetNumber,
+        StreetName = this.ShipmentInfo.StreetName,
+        City = this.ShipmentInfo.City,
+        Enterance = string.Empty,
+        Apratment = 0,
+        Floor = 0
+      };
+
+    private ShopperDetails getShopperDetails()
+      =>
+      new ShopperDetails()
+      {
+        Idz = WSGeneralUtils.GetAppSettings("defaultShopperIdz"),
+        FirstName = this.ClientInfo.FirstName,
+        Email = this.ClientInfo.EmailAddress,
+        LastName = this.ClientInfo.LastName,
+        PhoneNumber = getPhoneNumber(),
+        Birthdate = DateTime.Today
+      }
+      .ValidateIdz();
 
     private string getPhoneNumber()
       =>
       string.IsNullOrEmpty(this.ClientInfo.PhoneNumber)
-      ? WSGeneralUtils.GetAppSettings("DefaultShopperPhoneNumber")
+      ? WSGeneralUtils.GetAppSettings("defaultShopperPhoneNumber")
       : this.ClientInfo.PhoneNumber;
 
     private int getShopID()
