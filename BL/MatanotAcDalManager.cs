@@ -56,24 +56,20 @@ namespace MatanotAuctionCreator.BL
       .Select(getOrderID)
       .ApplyEach(i => attachFileToSingleOrder(i, virtualPath));
 
-    public void BurnOrders(IEnumerable<MatanotOrder> orders)
-      =>
-      orders
-      .ApplyEach(burnOrder);
-
     public void UpdateOrderStatus(int orderID, eOrderStatus orderStatus, string failureReason = "")
       =>
       this.dal
       .UpdateOrderStatus(orderID, (int)orderStatus, failureReason);
 
+    public void BurnOrders(IEnumerable<MatanotOrder> orders)
+      =>
+      orders
+      .ApplyEach(burnOrder);
+
     private void burnOrder(MatanotOrder order)
     {
-      this.dal
-        .BurnOrder(order);
-
-      order
-        .Items
-        .ForEach(i => burnOrderItem(i, order.OrderID));
+      this.dal.BurnOrder(order);
+      burnOrderItems(order);
     }
 
     private IEnumerable<MatanotOrderItem> getItems(int orderID)
@@ -93,10 +89,14 @@ namespace MatanotAuctionCreator.BL
              };
     }
 
-    private void burnOrderItem(MatanotOrderItem item, int orderID)
+    private void burnOrderItems(MatanotOrder order)
       =>
-      this.dal
-      .BurnOrderItem(item, orderID);
+      order
+      .Items
+      .ForEach(i =>
+      {
+        this.dal.BurnOrderItem(i, order.OrderID);
+      });
 
     private void attachFileToSingleOrder(int orderID, string virtualPath)
       =>
