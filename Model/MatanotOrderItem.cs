@@ -7,7 +7,7 @@ namespace MatanotAuctionCreator.Model
     [JsonProperty("product_name")]
     public string Name { get; set; }
 
-    [JsonProperty("product_price")]
+    [JsonProperty("sell_price")]
     public int Price { get; set; }
 
     [JsonProperty("walla_price")]
