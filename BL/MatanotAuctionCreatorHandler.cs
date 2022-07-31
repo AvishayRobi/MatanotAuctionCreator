@@ -10,15 +10,15 @@ namespace MatanotAuctionCreator.BL
   public class MatanotAuctionCreatorHandler
   {
     #region Data Members
+    private MatanotAcSftpManager sftpManager;
     private MatanotAcDalManager dalManager;
-    private MatanotAcFtpManager ftpManager;
     #endregion
 
     #region Ctor
     public MatanotAuctionCreatorHandler()
     {
+      this.sftpManager = new MatanotAcSftpManager();
       this.dalManager = new MatanotAcDalManager();
-      this.ftpManager = new MatanotAcFtpManager();
     }
     #endregion
 
@@ -37,21 +37,27 @@ namespace MatanotAuctionCreator.BL
     private void startProcess()
     {
       IEnumerable<MatanotOrder> orders = getOrders();
+      handleFile(orders);
       burnOrders(orders);
-      backUpFile(orders);
       createWsAuctions(orders);
     }
 
-    private void backUpFile(IEnumerable<MatanotOrder> orders)
+    private void handleFile(IEnumerable<MatanotOrder> orders)
     {
-      string virtualPath = getVirtualPath();
+      backUpOrders(orders);
+      deleteRemoteFile();
+    }
+
+    private void backUpOrders(IEnumerable<MatanotOrder> orders)
+    {
+      string virtualPath = backUpFile();
       attachFileToOrders(orders, virtualPath);
     }
 
-    private string getVirtualPath()
+    private string backUpFile()
     {
-      string ftpFileContent = getFtpFileContent();
-      string ftpFileName = getFtpFileName();
+      string ftpFileContent = getSftpFileContent();
+      string ftpFileName = getSftpFileName();
       string virtualPath = uploadToBlob(ftpFileContent, ftpFileName);
 
       return virtualPath;
@@ -76,19 +82,24 @@ namespace MatanotAuctionCreator.BL
 
     private ICollection<MatanotOrder> getNewOrders()
       =>
-      this.ftpManager
+      this.sftpManager
       .SetUpFileContent()
       .GetOrders();
 
-    private string getFtpFileContent()
+    private string getSftpFileContent()
       =>
-      this.ftpManager
-      .GetFtpFileContent();
+      this.sftpManager
+      .GetFileContent();
 
-    private string getFtpFileName()
+    private string getSftpFileName()
       =>
-      this.ftpManager
+      this.sftpManager
       .GetFileName();
+
+    private void deleteRemoteFile()
+      =>
+      this.sftpManager
+      .DeleteRemoteFile();
 
     private IEnumerable<MatanotOrder> getPreviousUnprocessedOrders()
       =>
