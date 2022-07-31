@@ -37,7 +37,8 @@ namespace MatanotAuctionCreator.BL
 
     private IEnumerable<MatanotOrder> getFlattedOrders(IEnumerable<MatanotOrder> orders)
       =>
-      orders.SelectMany(o => o.Items.Select(i => new MatanotOrder
+      orders
+      .SelectMany(o => o.Items.Select(i => new MatanotOrder
       {
         Items = new List<MatanotOrderItem> { i },
         ShipmentInfo = o.ShipmentInfo,
@@ -52,7 +53,7 @@ namespace MatanotAuctionCreator.BL
       this.splittedOrders
       .GroupBy(o => new
       {
-        o.Items.FirstOrDefault().ShopID,
+        o.Items.First().ShopID,
         o.OrderID
       })
       .Select(g => new MatanotOrder()
