@@ -38,7 +38,6 @@ namespace MatanotAuctionCreator.BL
         catch (Exception ex)
         {
           handleMacException(order.OrderID, ex);
-          continue;
         }
       }
     }
@@ -74,7 +73,7 @@ namespace MatanotAuctionCreator.BL
 
     private bool auctionIdNotExist(MatanotOrderItem item)
       =>
-      string.IsNullOrEmpty(item.SKU);
+      string.IsNullOrEmpty(item.AuctionID);
 
     private void updateOrderStatus(int orderID, eOrderStatus orderStatus, string failureReason = "")
       =>
