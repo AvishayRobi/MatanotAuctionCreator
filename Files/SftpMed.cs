@@ -39,8 +39,7 @@ namespace MatanotAuctionCreator.Files
       return this.client
         .ListDirectory(this.folderPath)
         .Select(getFileName)
-        .Where(isFileTypeJson)
-        .FirstOrDefault()
+        .FirstOrDefault(isFileTypeJson)
         .LastAppearanceAfter('/');
     }
 
