@@ -49,7 +49,7 @@ namespace MatanotAuctionCreator.Model
       =>
       new ShippingDetails()
       {
-        ZipCode = int.Parse(this.ShipmentInfo.ZipCode),
+        ZipCode = WSStringUtils.ToInt(this.ShipmentInfo.ZipCode),
         StreetNumber = this.ShipmentInfo.StreetNumber,
         StreetName = this.ShipmentInfo.StreetName,
         City = this.ShipmentInfo.City,
@@ -92,13 +92,14 @@ namespace MatanotAuctionCreator.Model
       =>
       new OrderItem()
       {
-        AuctionID = int.TryParse(productInfo.SKU, out int x) ? int.Parse(productInfo.SKU) : 0,
+        AuctionID = WSStringUtils.ToInt(productInfo.AuctionID),
         PriceBeforeDiscount = productInfo.Price,
         CouponAmount = productInfo.WallaPrice,
         Quantity = productInfo.Quantity,
         Description = productInfo.Name,
         FinalPrice = productInfo.Price,
-        ShopID = productInfo.ShopID
-      };
+        PfId = productInfo.PfId
+      }
+      .ValidatePrices();
   }
 }
