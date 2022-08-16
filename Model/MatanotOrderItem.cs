@@ -13,8 +13,11 @@ namespace MatanotAuctionCreator.Model
     [JsonProperty("walla_price")]
     public int WallaPrice { get; set; }
 
+    [JsonProperty("product_auction")]
+    public string AuctionID { get; set; }
+
     [JsonProperty("product_sku")]
-    public string SKU { get; set; }
+    public string PfId { get; set; }
 
     [JsonProperty("qty")]
     public int Quantity { get; set; }
