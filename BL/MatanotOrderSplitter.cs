@@ -43,6 +43,7 @@ namespace MatanotAuctionCreator.BL
         Items = new List<MatanotOrderItem> { i },
         ShipmentInfo = o.ShipmentInfo,
         ClientInfo = o.ClientInfo,
+        ShopperID = o.ShopperID,
         OrderDate = o.OrderDate,
         TotalPrice = i.Price,
         OrderID = o.OrderID
@@ -62,6 +63,7 @@ namespace MatanotAuctionCreator.BL
         Items = g.SelectMany(i => i.Items).ToList(),
         ShipmentInfo = g.First().ShipmentInfo,
         ClientInfo = g.First().ClientInfo,
+        ShopperID = g.First().ShopperID,
         OrderDate = g.First().OrderDate,
         OrderID = g.First().OrderID
       });
