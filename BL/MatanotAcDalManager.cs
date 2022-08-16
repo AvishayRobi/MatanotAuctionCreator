@@ -83,9 +83,9 @@ namespace MatanotAuctionCreator.BL
                WallaPrice = WSStringUtils.ToInt(dr["walla_price"]),
                Name = WSStringUtils.ToString(dr["product_name"]),
                Quantity = WSStringUtils.ToInt(dr["quantity"]),
+               AuctionID = WSStringUtils.ToString(dr["sku"]),
                ShopID = WSStringUtils.ToInt(dr["shop_id"]),
-               Price = WSStringUtils.ToInt(dr["price"]),
-               SKU = WSStringUtils.ToString(dr["sku"])
+               Price = WSStringUtils.ToInt(dr["price"])
              };
     }
 
