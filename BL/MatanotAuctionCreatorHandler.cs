@@ -10,8 +10,8 @@ namespace MatanotAuctionCreator.BL
   public class MatanotAuctionCreatorHandler
   {
     #region Data Members
-    private MatanotAcSftpManager sftpManager;
-    private MatanotAcDalManager dalManager;
+    private MatanotAcSftpManager sftpManager { get; }
+    private MatanotAcDalManager dalManager { get; }
     #endregion
 
     #region Ctor
