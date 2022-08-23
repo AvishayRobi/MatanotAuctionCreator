@@ -50,44 +50,28 @@ namespace MatanotAuctionCreator.BL
              };
     }
 
-    public void AttachFileToOrders(IEnumerable<MatanotOrder> orders, string virtualPath)
-      =>
-      orders
-      .Select(getOrderID)
-      .ApplyEach(i => attachFileToSingleOrder(i, virtualPath));
-
     public void UpdateOrderStatus(int orderID, eOrderStatus orderStatus, string failureReason = "")
       =>
       this.dal
       .UpdateOrderStatus(orderID, (int)orderStatus, failureReason);
 
+    public void AttachFileToOrders(IEnumerable<MatanotOrder> orders, string virtualPath)
+      =>
+      orders
+      .Select(i => i.OrderID)
+      .ApplyEach(i =>
+      {
+        this.dal.AttachFileToSingleOrder(i, virtualPath);
+      });    
+
     public void BurnOrders(IEnumerable<MatanotOrder> orders)
       =>
       orders
-      .ApplyEach(burnOrder);
-
-    private void burnOrder(MatanotOrder order)
-    {
-      this.dal.BurnOrder(order);
-      burnOrderItems(order);
-    }
-
-    private IEnumerable<MatanotOrderItem> getItems(int orderID)
-    {
-      DataTable dt = this.dal.GetUnprocessedAuctionItems(orderID);
-
-      return from DataRow dr
-             in dt.Rows
-             select new MatanotOrderItem()
-             {
-               WallaPrice = WSStringUtils.ToInt(dr["walla_price"]),
-               Name = WSStringUtils.ToString(dr["product_name"]),
-               Quantity = WSStringUtils.ToInt(dr["quantity"]),
-               AuctionID = WSStringUtils.ToString(dr["sku"]),
-               ShopID = WSStringUtils.ToInt(dr["shop_id"]),
-               Price = WSStringUtils.ToInt(dr["price"])
-             };
-    }
+      .ApplyEach(o =>
+      {
+        this.dal.BurnOrder(o);
+        burnOrderItems(o);
+      });
 
     private void burnOrderItems(MatanotOrder order)
       =>
@@ -98,13 +82,22 @@ namespace MatanotAuctionCreator.BL
         this.dal.BurnOrderItem(i, order.OrderID);
       });
 
-    private void attachFileToSingleOrder(int orderID, string virtualPath)
-      =>
-      this.dal
-      .AttachFileToOrders(orderID, virtualPath);
+    private IEnumerable<MatanotOrderItem> getItems(int orderID)
+    {
+      DataTable dt = this.dal.GetUnprocessedAuctionItems(orderID);
 
-    private int getOrderID(MatanotOrder order)
-      =>
-      order.OrderID;
+      return from DataRow dr
+             in dt.Rows
+             select new MatanotOrderItem()
+             {
+               AuctionID = WSStringUtils.ToString(dr["auction_id"]),
+               WallaPrice = WSStringUtils.ToInt(dr["walla_price"]),
+               Name = WSStringUtils.ToString(dr["product_name"]),
+               Quantity = WSStringUtils.ToInt(dr["quantity"]),
+               ShopID = WSStringUtils.ToInt(dr["shop_id"]),
+               PfId = WSStringUtils.ToString(dr["pf_id"]),
+               Price = WSStringUtils.ToInt(dr["price"])
+             };
+    }    
   }
 }
