@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MatanotAuctionCreator.Logs;
 using MatanotAuctionCreator.Model;
+using WallaShops.Objects;
 using WSOrderCreator;
 
 namespace MatanotAuctionCreator.BL
@@ -10,7 +11,7 @@ namespace MatanotAuctionCreator.BL
   public class MatanotWsAuctionManager
   {
     #region Data Members
-    private MatanotAcDalManager dalManager { get; set; }
+    private IOrderStatusUpdatable dalManager { get; set; }
     #endregion
 
     #region Ctor
@@ -20,7 +21,7 @@ namespace MatanotAuctionCreator.BL
     }
     #endregion
 
-    public MatanotWsAuctionManager SetDalManager(MatanotAcDalManager dalManager)
+    public MatanotWsAuctionManager SetOrderStatusUpdatableDalManager(IOrderStatusUpdatable dalManager)
     {
       this.dalManager = dalManager;
 
@@ -69,6 +70,7 @@ namespace MatanotAuctionCreator.BL
     private void createSingleWsAuction(MatanotOrder order)
       =>
       new WSOrderCreatorHandler()
+      .SetOrderProcess(WSOrderProcess.MatanotCC)
       .CreateWsAuction(order);
 
     private bool auctionIdNotExist(MatanotOrderItem item)
