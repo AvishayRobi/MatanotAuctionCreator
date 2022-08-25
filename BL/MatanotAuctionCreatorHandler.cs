@@ -121,7 +121,7 @@ namespace MatanotAuctionCreator.BL
     private void createWsAuctions(IEnumerable<MatanotOrder> orders)
       =>
       new MatanotWsAuctionManager()
-      .SetDalManager(this.dalManager)
+      .SetOrderStatusUpdatableDalManager(this.dalManager)
       .CreateWsAuctions(orders);
 
     private IEnumerable<MatanotOrder> splitOrders(IEnumerable<MatanotOrder> orders)
