@@ -7,7 +7,7 @@ using WallaShops.Utils;
 
 namespace MatanotAuctionCreator.BL
 {
-  public class MatanotAcDalManager
+  public class MatanotAcDalManager: IOrderStatusUpdatable
   {
     #region Data Members
     private MatanotAcDal dal { get; }
