@@ -29,7 +29,7 @@ namespace MatanotAuctionCreator.DAL
       spParams.AddInputParameter("@shipping_street_num", order.ShipmentInfo.StreetNumber);
       spParams.AddInputParameter("@zip_code", order.ShipmentInfo.ZipCode);
 
-      this.ExecuteNonQuery("matanot_ac_burn_orders", ref spParams);
+      base.ExecuteNonQuery("matanot_ac_burn_orders", ref spParams);
     }
 
     public void BurnOrderItem(MatanotOrderItem item, int orderID)
@@ -43,7 +43,7 @@ namespace MatanotAuctionCreator.DAL
       spParams.AddInputParameter("@quantity", item.Quantity);
       spParams.AddInputParameter("@shop_id", item.ShopID);
 
-      this.ExecuteNonQuery("matanot_ac_burn_order_item", ref spParams);
+      base.ExecuteNonQuery("matanot_ac_burn_order_item", ref spParams);
     }   
 
     public DataTable GetUnprocessedAuctionItems(int orderID)
@@ -51,7 +51,7 @@ namespace MatanotAuctionCreator.DAL
       WSSqlParameters spParams = new WSSqlParameters();
       spParams.AddInputParameter("@order_id", orderID);
 
-      return this.GetDataTable("matanot_ac_get_previous_unprocessed_order_items", ref spParams);
+      return base.GetDataTable("matanot_ac_get_previous_unprocessed_order_items", ref spParams);
     }
 
     public void UpdateOrderStatus(int orderID, int status, string failureReason = "")
@@ -61,7 +61,7 @@ namespace MatanotAuctionCreator.DAL
       spParams.AddInputParameter("@status", status);
       spParams.AddInputParameter("@failure_reason", failureReason);
 
-      this.ExecuteNonQuery("matanot_ac_update_order_status", ref spParams);
+      base.ExecuteNonQuery("matanot_ac_update_order_status", ref spParams);
     }
 
     public void AttachFileToOrders(int orderID, string virtualPath)
@@ -70,11 +70,11 @@ namespace MatanotAuctionCreator.DAL
       spParams.AddInputParameter("@order_id", orderID);
       spParams.AddInputParameter("@virtual_path", virtualPath);
 
-      this.ExecuteNonQuery("matanot_ac_attach_file_to_order", ref spParams);
+      base.ExecuteNonQuery("matanot_ac_attach_file_to_order", ref spParams);
     }
 
     public DataTable GetUnprocessedAuctions()
      =>
-     this.GetDataTable("matanot_ac_get_previous_unprocessed_orders");
+     base.GetDataTable("matanot_ac_get_previous_unprocessed_orders");
   }
 }
